@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flipkart E-commerce Clone</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header bg-primary text-white sticky-top">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-dark">
+                <div class="container-fluid">
+                    <!-- Logo -->
+                    <a class="navbar-brand fw-bold fs-3" href="#" onclick="showHome()">
+                        <span class="text-white">Flip</span><span class="text-warning">kart</span>
+                    </a>
+
+                    <!-- Mobile toggle -->
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <!-- Search Bar -->
+                    <div class="flex-grow-1 mx-4 d-none d-md-block">
+                        <div class="input-group">
+                            <input type="text" id="searchInput" class="form-control" placeholder="Search for products, brands and more">
+                            <button class="btn btn-outline-light" type="button" onclick="performSearch()">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Items -->
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ms-auto align-items-center">
+                            <li class="nav-item" id="userSection" style="display: none;">
+                                <div class="d-flex align-items-center">
+                                    <span class="me-3" id="userName"></span>
+                                    <button class="btn btn-sm btn-outline-light me-2" onclick="showOrders()">
+                                        <i class="fas fa-box me-1"></i>Orders
+                                    </button>
+                                    <button class="btn btn-sm btn-warning me-2" id="adminBtn" onclick="showAdmin()" style="display: none;">
+                                        Admin
+                                    </button>
+                                    <button class="btn btn-sm btn-danger" onclick="logout()">Logout</button>
+                                </div>
+                            </li>
+                            <li class="nav-item" id="loginSection">
+                                <button class="btn btn-outline-light me-3" onclick="showLoginModal()">
+                                    <i class="fas fa-user me-1"></i>Login
+                                </button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="btn btn-outline-light position-relative" onclick="showCart()">
+                                    <i class="fas fa-shopping-cart"></i>
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cartCount">0</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Mobile Search -->
+            <div class="d-md-none pb-3">
+                <div class="input-group">
+                    <input type="text" id="mobileSearchInput" class="form-control" placeholder="Search for products, brands and more">
+                    <button class="btn btn-outline-light" type="button" onclick="performMobileSearch()">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="mainContent">
+        <!-- Home Page -->
+        <div id="homePage">
+            <!-- Categories -->
+            <div class="bg-white border-bottom py-3">
+                <div class="container">
+                    <div class="d-flex overflow-auto" id="categoriesContainer">
+                        <!-- Categories will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Brand Slider -->
+            <div id="brandSlider" class="position-relative bg-primary text-white" style="height: 70vh;">
+                <div class="position-absolute w-100 h-100">
+                    <img id="brandImage" class="w-100 h-100 object-fit-cover opacity-25" src="" alt="">
+                    <div class="position-absolute top-0 start-0 w-100 h-100 bg-gradient"></div>
+                </div>
+
+                <!-- Navigation Arrows -->
+                <button class="btn btn-light position-absolute top-50 start-0 translate-middle-y ms-3 rounded-circle" onclick="prevSlide()">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="btn btn-light position-absolute top-50 end-0 translate-middle-y me-3 rounded-circle" onclick="nextSlide()">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+
+                <!-- Content -->
+                <div class="position-absolute top-50 start-50 translate-middle text-center">
+                    <p class="text-warning fs-5 fw-bold">FEATURED BRAND</p>
+                    <h1 class="display-1 fw-bold" id="brandName"></h1>
+                    <p class="fs-4 text-light mb-4" id="brandDescription"></p>
+                    <div class="d-flex gap-3 justify-content-center">
+                        <button class="btn btn-warning btn-lg px-4" onclick="filterByBrand()">Shop Now</button>
+                        <button class="btn btn-outline-light btn-lg px-4">Learn More</button>
+                    </div>
+                </div>
+
+                <!-- Dots Indicator -->
+                <div class="position-absolute bottom-0 start-50 translate-middle-x mb-4">
+                    <div class="d-flex gap-2" id="brandDots">
+                        <!-- Dots will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="container py-5">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="fw-bold" id="productsTitle">All Products</h2>
+                    <button class="btn btn-primary" id="clearFiltersBtn" onclick="clearFilters()" style="display: none;">
+                        Clear Filters
+                    </button>
+                </div>
+                <div class="row g-4" id="productsGrid">
+                    <!-- Products will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Detail Page -->
+        <div id="productDetailPage" style="display: none;">
+            <div class="container py-4">
+                <button class="btn btn-primary mb-4" onclick="showHome()">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Products
+                </button>
+                <div id="productDetailContent">
+                    <!-- Product detail content will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Cart Page -->
+        <div id="cartPage" style="display: none;">
+            <div class="container py-4">
+                <button class="btn btn-primary mb-4" onclick="showHome()">
+                    <i class="fas fa-arrow-left me-2"></i>Continue Shopping
+                </button>
+                <div id="cartContent">
+                    <!-- Cart content will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Checkout Page -->
+        <div id="checkoutPage" style="display: none;">
+            <div class="container py-4">
+                <button class="btn btn-primary mb-4" onclick="showCart()">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Cart
+                </button>
+                <div id="checkoutContent">
+                    <!-- Checkout content will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Page -->
+        <div id="paymentPage" style="display: none;">
+            <div class="container py-4">
+                <button class="btn btn-primary mb-4" onclick="showCheckout()">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Checkout
+                </button>
+                <div id="paymentContent">
+                    <!-- Payment content will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Orders Page -->
+        <div id="ordersPage" style="display: none;">
+            <div class="container py-4">
+                <button class="btn btn-primary mb-4" onclick="showHome()">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Home
+                </button>
+                <div id="ordersContent">
+                    <!-- Orders content will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Dashboard -->
+        <div id="adminPage" style="display: none;">
+            <div class="container py-4">
+                <button class="btn btn-primary mb-4" onclick="showHome()">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Home
+                </button>
+                <div id="adminContent">
+                    <!-- Admin content will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-5" id="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <h5>About</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-light text-decoration-none">Contact Us</a></li>
+                        <li><a href="#" class="text-light text-decoration-none">About Us</a></li>
+                        <li><a href="#" class="text-light text-decoration-none">Careers</a></li>
+                        <li><a href="#" class="text-light text-decoration-none">Press</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Help</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-light text-decoration-none">Payments</a></li>
+                        <li><a href="#" class="text-light text-decoration-none">Shipping</a></li>
+                        <li><a href="#" class="text-light text-decoration-none">Returns</a></li>
+                        <li><a href="#" class="text-light text-decoration-none">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Policy</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-light text-decoration-none">Return Policy</a></li>
+                        <li><a href="#" class="text-light text-decoration-none">Terms of Use</a></li>
+                        <li><a href="#" class="text-light text-decoration-none">Security</a></li>
+                        <li><a href="#" class="text-light text-decoration-none">Privacy</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Social</h5>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-light"><i class="fab fa-facebook fa-lg"></i></a>
+                        <a href="#" class="text-light"><i class="fab fa-twitter fa-lg"></i></a>
+                        <a href="#" class="text-light"><i class="fab fa-instagram fa-lg"></i></a>
+                        <a href="#" class="text-light"><i class="fab fa-youtube fa-lg"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-center">
+                <p>&copy; 2024 Flipkart Clone. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalTitle">Login to Your Account</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="authForm">
+                        <div class="mb-3" id="nameField" style="display: none;">
+                            <label class="form-label">Full Name *</label>
+                            <input type="text" class="form-control" id="fullName" placeholder="Enter your full name">
+                            <div class="invalid-feedback" id="nameError"></div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Email Address *</label>
+                            <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+                            <div class="invalid-feedback" id="emailError"></div>
+                        </div>
+
+                        <div class="mb-3" id="phoneField" style="display: none;">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" id="phone" placeholder="Enter your phone number">
+                            <div class="invalid-feedback" id="phoneError"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Password *</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+                                <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('password')">
+                                    <i class="fas fa-eye" id="passwordToggle"></i>
+                                </button>
+                            </div>
+                            <div class="invalid-feedback" id="passwordError"></div>
+                        </div>
+
+                        <div class="mb-3" id="confirmPasswordField" style="display: none;">
+                            <label class="form-label">Confirm Password *</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm your password">
+                                <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('confirmPassword')">
+                                    <i class="fas fa-eye" id="confirmPasswordToggle"></i>
+                                </button>
+                            </div>
+                            <div class="invalid-feedback" id="confirmPasswordError"></div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 mb-3" id="authSubmitBtn">
+                            <span id="authBtnText">Sign In</span>
+                            <span id="authLoader" class="spinner-border spinner-border-sm ms-2" style="display: none;"></span>
+                        </button>
+
+                        <div class="text-center">
+                            <button type="button" class="btn btn-link" id="switchModeBtn" onclick="switchAuthMode()">
+                                Don't have an account? Sign up
+                            </button>
+                        </div>
+
+                        <div class="alert alert-info mt-3">
+                            <strong>Demo accounts:</strong><br>
+                            Customer: any valid email<br>
+                            Admin: admin@flipkart.com
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div class="modal fade" id="addProductModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Product</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addProductForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Product Name *</label>
+                                <input type="text" class="form-control" id="productName" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Brand *</label>
+                                <input type="text" class="form-control" id="productBrand" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Price *</label>
+                                <input type="number" class="form-control" id="productPrice" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Original Price</label>
+                                <input type="number" class="form-control" id="productOriginalPrice">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Category *</label>
+                                <select class="form-select" id="productCategory" required>
+                                    <option value="">Select category</option>
+                                    <option value="Electronics">Electronics</option>
+                                    <option value="Fashion">Fashion</option>
+                                    <option value="Home & Kitchen">Home & Kitchen</option>
+                                    <option value="Books">Books</option>
+                                    <option value="Sports">Sports</option>
+                                    <option value="Beauty & Personal Care">Beauty & Personal Care</option>
+                                    <option value="Toys & Games">Toys & Games</option>
+                                    <option value="Automotive">Automotive</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Image URL</label>
+                                <input type="url" class="form-control" id="productImage">
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label">Description *</label>
+                                <textarea class="form-control" id="productDescription" rows="3" required></textarea>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button type="button" class="btn btn-secondary flex-fill" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary flex-fill">Add Product</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JavaScript -->
+    <script src="data.js"></script>
+    <script src="auth.js"></script>
+    <script src="cart.js"></script>
+    <script src="products.js"></script>
+    <script src="admin.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
